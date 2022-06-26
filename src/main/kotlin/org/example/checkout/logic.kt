@@ -16,15 +16,17 @@ val checkoutLogic: (GetPricingRules) -> Checkout = { getPricingRules ->
 private val discountedPriceLogic: (PricingRules) -> (Items) -> Long =
     { pricingRules -> { items ->
         items.groupingBy { it }.eachCount()
-            .map { (item, quantity) -> discount(item, quantity, pricingRules.findBySku(item.sku)) }
+            .map { (item, quantity) -> discount(item.unitPrice, quantity, pricingRules.findBySku(item.sku)) }
             .fold(0, Long::plus)
     } }
 
-private val discount: (Item, Int, PricingRule?) -> Long = { item, quantity, maybePricingRule ->
+private val discount: (Long, Int, PricingRule?) -> Long = { itemUnitPrice, quantity, maybePricingRule ->
     val unitsOffer = maybePricingRule?.specialOffer?.units ?: 0
-    val subtotal = item.unitPrice * quantity
-    if (unitsOffer == quantity)
-        subtotal - maybePricingRule!!.specialOffer.price
+    if (unitsOffer > 0)
+        with(maybePricingRule!!) {
+            val baseDiscount = itemUnitPrice * specialOffer.units - specialOffer.price
+            (quantity / specialOffer.units) * baseDiscount
+        }
     else 0
 }
 
