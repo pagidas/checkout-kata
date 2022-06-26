@@ -2,8 +2,6 @@ package org.example.checkout
 
 import org.example.checkout.Checkout.Item
 import org.example.checkout.Checkout.SKU
-import org.example.checkout.GetPricingRules.PricingRule
-import org.example.checkout.GetPricingRules.SpecialOffer
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
@@ -12,11 +10,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class CheckoutTest {
+abstract class CheckoutContract {
 
-    val checkout: Checkout = checkoutLogic(GetPricingRules { listOf(
-        PricingRule(SKU("B"), SpecialOffer(2, 100))
-    ) })
+    abstract val checkout: Checkout
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideItemsAndExpectedTotal")
