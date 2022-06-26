@@ -21,6 +21,7 @@ fun interface Checkout: (Items) -> Long {
 fun interface GetPricingRules: () -> PricingRules {
     sealed interface PricingRule {
         data class MultipricedDeal(val sku: SKU, val specialOffer: SpecialOffer): PricingRule
+        data class MealDeal2(val compositeSku: Pair<SKU, SKU>, val price: Long): PricingRule
     }
 
     data class SpecialOffer(val units: Int, val price: Long)

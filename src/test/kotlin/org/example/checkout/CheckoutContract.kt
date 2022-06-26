@@ -32,7 +32,10 @@ abstract class CheckoutContract {
             `three B with two for one discount and one A`(),
             `three C with buy three get one free discount`(),
             `four C with buy three get one free discount`(),
-            `six C with buy three get one free discount`()
+            `six C with buy three get one free discount`(),
+            `D E with meal deal discount`(),
+            `D E D with meal deal discount`(),
+            `D E D E with meal deal discount`()
         )
 
     private fun `no items`(): Arguments = Arguments.of(
@@ -144,6 +147,36 @@ abstract class CheckoutContract {
             Item(SKU("C"), 25)
         ),
         100
+    )
+
+    private fun `D E with meal deal discount`(): Arguments = Arguments.of(
+        "D, E with meal deal discount",
+        listOf(
+            Item(SKU("D"), 150),
+            Item(SKU("E"), 200)
+        ),
+        300
+    )
+
+    private fun `D E D with meal deal discount`(): Arguments = Arguments.of(
+        "D, E, D with meal deal discount",
+        listOf(
+            Item(SKU("D"), 150),
+            Item(SKU("E"), 200),
+            Item(SKU("D"), 150)
+        ),
+        450
+    )
+
+    private fun `D E D E with meal deal discount`(): Arguments = Arguments.of(
+        "D, E, D, E with meal deal discount",
+        listOf(
+            Item(SKU("D"), 150),
+            Item(SKU("E"), 200),
+            Item(SKU("D"), 150),
+            Item(SKU("E"), 200),
+        ),
+        600
     )
 }
 
