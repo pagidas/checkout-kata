@@ -1,7 +1,7 @@
 package org.example.checkout
 
 import org.example.checkout.Checkout.SKU
-import org.example.checkout.GetPricingRules.PricingRule
+import org.example.checkout.GetPricingRules.PricingRule.MultipricedDeal
 import org.example.checkout.GetPricingRules.SpecialOffer
 
 class CheckoutLogicTest: CheckoutContract() {
@@ -9,8 +9,8 @@ class CheckoutLogicTest: CheckoutContract() {
         checkoutLogic(
             inMemoryGetPricingRules(
                 listOf(
-                    PricingRule(SKU("B"), SpecialOffer(2, 100)),
-                    PricingRule(SKU("C"), SpecialOffer(3, 50))
+                    MultipricedDeal(SKU("B"), SpecialOffer(2, 100)),
+                    MultipricedDeal(SKU("C"), SpecialOffer(3, 50))
                 )
         ))
 }

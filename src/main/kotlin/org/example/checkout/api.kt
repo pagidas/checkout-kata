@@ -19,7 +19,10 @@ fun interface Checkout: (Items) -> Long {
  * The driven application interface.
  */
 fun interface GetPricingRules: () -> PricingRules {
-    data class PricingRule(val sku: SKU, val specialOffer: SpecialOffer)
+    sealed interface PricingRule {
+        data class MultipricedDeal(val sku: SKU, val specialOffer: SpecialOffer): PricingRule
+    }
+
     data class SpecialOffer(val units: Int, val price: Long)
 }
 

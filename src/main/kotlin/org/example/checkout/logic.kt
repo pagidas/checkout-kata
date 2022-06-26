@@ -2,7 +2,7 @@ package org.example.checkout
 
 import org.example.checkout.Checkout.Item
 import org.example.checkout.Checkout.SKU
-import org.example.checkout.GetPricingRules.PricingRule
+import org.example.checkout.GetPricingRules.PricingRule.MultipricedDeal
 
 val checkoutLogic: (GetPricingRules) -> Checkout = { getPricingRules ->
     val discountedPrice = discountedPriceLogic(getPricingRules())
@@ -15,20 +15,24 @@ val checkoutLogic: (GetPricingRules) -> Checkout = { getPricingRules ->
 
 private val discountedPriceLogic: (PricingRules) -> (Items) -> Long =
     { pricingRules -> { items ->
-        items.groupingBy { it }.eachCount()
-            .map { (item, quantity) -> discount(item.unitPrice, quantity, pricingRules.findBySku(item.sku)) }
-            .fold(0, Long::plus)
+        pricingRules.map { rule ->
+            when (rule) {
+                is MultipricedDeal -> multipricedDiscount(items, rule)
+            }
+        }.fold(0, Long::plus)
     } }
 
-private val discount: (Long, Int, PricingRule?) -> Long = { itemUnitPrice, quantity, maybePricingRule ->
-    val unitsOffer = maybePricingRule?.specialOffer?.units ?: 0
-    if (unitsOffer > 0)
-        with(maybePricingRule!!) {
-            val baseDiscount = itemUnitPrice * specialOffer.units - specialOffer.price
-            (quantity / specialOffer.units) * baseDiscount
-        }
-    else 0
+private val multipricedDiscount: (Items, MultipricedDeal) -> Long = { items, multipricedDeal ->
+    val discountable = items.filter(hasSku(multipricedDeal.sku))
+    if (discountable.isEmpty()) 0
+    else with(multipricedDeal) {
+        val item = discountable.first()
+        val quantity = discountable.count()
+
+        val baseDiscount = item.unitPrice * specialOffer.units - specialOffer.price
+        (quantity / specialOffer.units) * baseDiscount
+    }
 }
 
-private fun PricingRules.findBySku(sku: SKU): PricingRule? = find { rule -> rule.sku == sku }
+private val hasSku: (SKU) -> (Item) -> Boolean = { requiredSku -> { item -> item.sku == requiredSku } }
 
