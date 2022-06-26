@@ -25,7 +25,8 @@ abstract class CheckoutContract {
             `no items`(),
             `a single A`(),
             `multiple A`(),
-            `two B with two for one discount`()
+            `two B with two for one discount`(),
+            `two B with discount and multiple A`()
         )
 
     private fun `no items`(): Arguments = Arguments.of(
@@ -59,6 +60,18 @@ abstract class CheckoutContract {
             Item(SKU("B"), 60)
         ),
         100
+    )
+
+    private fun `two B with discount and multiple A`(): Arguments = Arguments.of(
+        "two B with 2 for £1 discount and multiple A",
+        listOf(
+            Item(SKU("B"), 60),
+            Item(SKU("B"), 60),
+            Item(SKU("A"), 50),
+            Item(SKU("A"), 50),
+            Item(SKU("A"), 50)
+        ),
+        250
     )
 }
 
