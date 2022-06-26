@@ -9,7 +9,8 @@ class CheckoutLogicTest: CheckoutContract() {
         checkoutLogic(
             inMemoryGetPricingRules(
                 listOf(
-                    PricingRule(SKU("B"), SpecialOffer(2, 100))
+                    PricingRule(SKU("B"), SpecialOffer(2, 100)),
+                    PricingRule(SKU("C"), SpecialOffer(3, 50))
                 )
         ))
 }
