@@ -35,7 +35,8 @@ abstract class CheckoutContract {
             `six C with buy three get one free discount`(),
             `D E with meal deal discount`(),
             `D E D with meal deal discount`(),
-            `D E D E with meal deal discount`()
+            `D E D E with meal deal discount`(),
+            `multiple discounts`()
         )
 
     private fun `no items`(): Arguments = Arguments.of(
@@ -177,6 +178,22 @@ abstract class CheckoutContract {
             Item(SKU("E"), 200),
         ),
         600
+    )
+
+    private fun `multiple discounts`(): Arguments = Arguments.of(
+        "multiple items with multiple discounts",
+        listOf(
+            Item(SKU("C"), 25),
+            Item(SKU("C"), 25),
+            Item(SKU("C"), 25),
+            Item(SKU("B"), 60),
+            Item(SKU("B"), 60),
+            Item(SKU("D"), 150),
+            Item(SKU("E"), 200),
+            Item(SKU("A"), 50),
+            Item(SKU("A"), 50),
+        ),
+        550
     )
 }
 
